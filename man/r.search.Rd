@@ -9,9 +9,10 @@ r.search(
   r.min = 1,
   r.max,
   svd.method = c("tsvd", "rsvd"),
-  rule.type = c("gic", "bic"),
-  thresh = 1e-05,
+  rule.type = c("gic", "cv"),
   maxit.rank = 1,
+  nfolds = 5,
+  thresh = 1e-05,
   maxit = 100,
   override = FALSE,
   control = list(...),
@@ -32,12 +33,14 @@ Any unambiguous substring can be given. Default \code{svd.method = "tsvd"}.}
 
 \item{rule.type}{a character string indicating the information criterion rule.
 If \code{rule.type = "gic"}, generalized information criterion rule is used,
-else if \code{rule.type = "bic"}, bayesian information criterion rule is used.
+else if \code{rule.type = "cv"}, cross validation is used.
 Any unambiguous substring can be given. Default \code{rule.type = "gic"}.}
 
-\item{thresh}{convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.}
-
 \item{maxit.rank}{maximal number of iterations in searching rank. Default \code{maxit.rank = 1}.}
+
+\item{nfolds}{number of folds in cross validation. Default \code{nfolds = 5}.}
+
+\item{thresh}{convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.}
 
 \item{maxit}{maximal number of iterations.}
 
@@ -56,7 +59,7 @@ A list containing the following components
 }
 \description{
 Estimate a preferable matrix rank magnitude for fitting a low-rank matrix approximation to a matrix with missing values.
-The algorithm use BIC/GIC rule to search the rank in a given range, and then fill the missing values with the estimated rank.
+The algorithm use GIC/CV to search the rank in a given range, and then fill the missing values with the estimated rank.
 }
 \examples{
 ################# Quick Start #################
@@ -67,6 +70,4 @@ x_na <- incomplete.generator(m, n, r)
 head(x_na[, 1:6])
 x_impute <- r.search(x_na, 1, 15, "rsvd", "gic")
 x_impute[["r.est"]]
-head(x_impute[["x.imp"]][, 1:6])
-x_impute[["rmse"]]
 }

@@ -52,15 +52,15 @@ biscale <- function(x, thresh.sd = 1e-05, maxit.sd = 100, control = list(...), .
   col.std <- controls$col.std
   if(row.mean + row.std + col.mean + col.std > 0){
     xna <- is.na(x)
-
+    xna_ind <- which(is.na(x))
     m_ob <- n - rowSums(xna)
     n_ob <- m - colSums(xna)
     m_ob[which(m_ob == 0)] <- 1e-08
     n_ob[which(n_ob == 0)] <- 1e-08
 
-    x_ind <- which(!is.na(x))
+    x_ind <- which(!is.na(x), arr.ind = TRUE)
     x_alt <- x
-    x_alt[-x_ind] <- 0
+    x_alt[xna_ind] <- 0
 
     # alpha <- rowMeans(x_alt)
     # beta <- colMeans(x_alt)
@@ -109,50 +109,17 @@ biscale <- function(x, thresh.sd = 1e-05, maxit.sd = 100, control = list(...), .
     }else{
       gamma <- rep(1, n)
     }
+    x_ind <- x_ind - 1
+    res <- biscale_alt(x, x_ind, m_ob, n_ob, maxit.sd, thresh.sd, alpha, beta, tau, gamma, row.mean, col.mean, row.std, col.std)
 
-    temp <- matrix(rep(0, n*m), nrow = m, ncol = n)
-    iter <- 0
-    err <- 100
-    while((err > thresh.sd) & (iter < maxit.sd)){
-      alpha_old <- alpha
-      beta_old <- beta
-      tau_old <- tau
-      gamma_old <- gamma
-      tau[which(tau == 0)] <- 1e-08
-      gamma[which(gamma == 0)] <- 1e-08
-      alpha_m <- matrix(rep(alpha, n), nrow = m)
-      beta_m <- t(matrix(rep(beta, m), nrow = n))
-
-      if(col.mean){
-        temp[x_ind] <- x_alt[x_ind] - alpha_m[x_ind]
-        beta <- colSums(temp/tau)/sum(1/tau) # col mean
-      }
-
-      if(row.mean){
-        temp[x_ind] <- x_alt[x_ind] - beta_m[x_ind]
-        alpha <- colSums(t(temp)/gamma)/sum(1/gamma) # row mean
-      }
-
-      if(col.std | row.std){
-        temp[x_ind] <- (x_alt[x_ind] - alpha_m[x_ind] - beta_m[x_ind])^2
-        if(col.std){
-          gamma <- sqrt(colSums(temp/tau^2)/n_ob) # col var
-          gamma[which(gamma == 0)] <- 1e-08
-        }
-
-        if(row.std){
-          tau <- sqrt(colSums(t(temp)/gamma^2)/m_ob) # row var
-          tau[which(tau == 0)] <- 1e-08
-        }
-      }
-
-      err <- max(sum(alpha - alpha_old)^2, sum(beta - beta_old)^2, sum(tau - tau_old)^2, sum(gamma - gamma_old)^2)
-      iter <- iter + 1
-    }
+    alpha = res[[1]]
+    beta = res[[2]]
+    tau = res[[3]]
+    gamma = res[[4]]
     alpha_m <- matrix(rep(alpha, n), nrow = m)
     beta_m <- t(matrix(rep(beta, m), nrow = n))
     x_st <- (x_alt - alpha_m - beta_m)/(tau %*% t(gamma))
-    x_st[-x_ind] <- NA
+    x_st[xna_ind] <- NA
   }else{
     x_st <- x
     alpha <- rep(0, m)
@@ -163,7 +130,6 @@ biscale <- function(x, thresh.sd = 1e-05, maxit.sd = 100, control = list(...), .
 
   list(x.st = x_st, alpha = alpha, beta = beta, tau = tau, gamma = gamma)
 }
-
 
 #' @title Control for standard procedure
 #'
@@ -185,4 +151,5 @@ biscale <- function(x, thresh.sd = 1e-05, maxit.sd = 100, control = list(...), .
 biscale.control <- function(row.mean = FALSE, row.std = FALSE, col.mean = FALSE, col.std = FALSE) {
   list(row.mean = row.mean, row.std = row.std, col.mean = col.mean, col.std = col.std)
 }
+
 

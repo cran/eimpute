@@ -61,13 +61,12 @@ eimpute <- function(x, r, svd.method = c("tsvd", "rsvd"),
   Z_temp <- kkt_fix(ind, x_ob, m, n, r, maxit, thresh, type)
   Z.fit <- Z_temp[[1]] * (x_sd[[4]] %*% t(x_sd[[5]])) + matrix(rep(x_sd[[2]], n), nrow = m) + t(matrix(rep(x_sd[[3]], m), nrow = n))
 
-  train_error <- sum((x_ob - Z.fit[ind_ob])^2) / sum(x_ob^2)
 
   if (!override) {
     Z.fit[ind_ob] <- x_ob
   }
 
-  list(x.imp = Z.fit, rmse = train_error, iter.count = Z_temp[[2]])
+  list(x.imp = Z.fit, rmse = Z_temp[[3]], iter.count = Z_temp[[2]])
 }
 
 
