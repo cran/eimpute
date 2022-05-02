@@ -8,8 +8,11 @@ eimpute(
   x,
   r,
   svd.method = c("tsvd", "rsvd"),
+  noise.var = 0,
   thresh = 1e-05,
   maxit = 100,
+  init = FALSE,
+  init.mat = 0,
   override = FALSE,
   control = list(...),
   ...
@@ -25,9 +28,15 @@ If \code{svd.method = "rsvd"}, a randomized SVD is used,
 else if \code{svd.method = "tsvd"}, standard truncated SVD is used.
 Any unambiguous substring can be given. Default \code{svd.method = "tsvd"}.}
 
+\item{noise.var}{the variance of noise.}
+
 \item{thresh}{convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.}
 
 \item{maxit}{maximal number of iterations.}
+
+\item{init}{if init = FALSE(the default), the missing entries will initialize with mean.}
+
+\item{init.mat}{the initialization matrix.}
 
 \item{override}{logical value indicating whether the observed elements in \code{x} should be overwritten by its low-rank approximation.}
 

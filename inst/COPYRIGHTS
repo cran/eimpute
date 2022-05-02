@@ -1,5 +1,5 @@
 Files: inst/include/Spectra/* inst/include/RMatOp/* inst/include/RMatOp.h inst/include/SymEigs.h
-Copyright: 2019 RSpectra package version 0.16-0 2018-2019 Yixuan Qiu, 2008-2010 Gael Guennebaud and 2010 Jitse Niesen
+Copyright: 2019 RSpectra package version 0.16-0 Yixuan Qiu
 License: MPL-2
 
 Files: inst/include/rsvd/*

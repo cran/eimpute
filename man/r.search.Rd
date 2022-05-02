@@ -7,9 +7,12 @@
 r.search(
   x,
   r.min = 1,
-  r.max,
+  r.max = "auto",
   svd.method = c("tsvd", "rsvd"),
   rule.type = c("gic", "cv"),
+  noise.var = 0,
+  init = FALSE,
+  init.mat = 0,
   maxit.rank = 1,
   nfolds = 5,
   thresh = 1e-05,
@@ -35,6 +38,12 @@ Any unambiguous substring can be given. Default \code{svd.method = "tsvd"}.}
 If \code{rule.type = "gic"}, generalized information criterion rule is used,
 else if \code{rule.type = "cv"}, cross validation is used.
 Any unambiguous substring can be given. Default \code{rule.type = "gic"}.}
+
+\item{noise.var}{the variance of noise.}
+
+\item{init}{if init = FALSE(the default), the missing entries will initialize with mean.}
+
+\item{init.mat}{the initialization matrix.}
 
 \item{maxit.rank}{maximal number of iterations in searching rank. Default \code{maxit.rank = 1}.}
 

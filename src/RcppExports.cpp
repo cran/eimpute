@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // vec2mat
 Eigen::MatrixXd vec2mat(Eigen::VectorXd x, int type, int num);
 RcppExport SEXP _eimpute_vec2mat(SEXP xSEXP, SEXP typeSEXP, SEXP numSEXP) {
@@ -56,12 +61,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // kkt_fix
-List kkt_fix(Eigen::MatrixXi& omega, Eigen::VectorXd& X, int m, int n, int rank, int max_it, double tol, int type);
-RcppExport SEXP _eimpute_kkt_fix(SEXP omegaSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP rankSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP) {
+List kkt_fix(Eigen::MatrixXi& omega, Eigen::MatrixXd& noise, Eigen::VectorXd& X, int m, int n, int rank, int max_it, double tol, int type, bool init);
+RcppExport SEXP _eimpute_kkt_fix(SEXP omegaSEXP, SEXP noiseSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP rankSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP, SEXP initSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXi& >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd& >::type noise(noiseSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd& >::type X(XSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
@@ -69,17 +75,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_it(max_itSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(kkt_fix(omega, X, m, n, rank, max_it, tol, type));
+    Rcpp::traits::input_parameter< bool >::type init(initSEXP);
+    rcpp_result_gen = Rcpp::wrap(kkt_fix(omega, noise, X, m, n, rank, max_it, tol, type, init));
     return rcpp_result_gen;
 END_RCPP
 }
 // cv_rank
-Eigen::VectorXd cv_rank(Eigen::MatrixXi& omega, Eigen::VectorXd& X, int m, int n, int r_min, int r_max, int n_fold, int max_it, double tol, int type);
-RcppExport SEXP _eimpute_cv_rank(SEXP omegaSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP r_minSEXP, SEXP r_maxSEXP, SEXP n_foldSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP) {
+Eigen::VectorXd cv_rank(Eigen::MatrixXi& omega, Eigen::MatrixXd& noise, Eigen::VectorXd& X, int m, int n, int r_min, int r_max, int n_fold, int max_it, double tol, int type, bool init);
+RcppExport SEXP _eimpute_cv_rank(SEXP omegaSEXP, SEXP noiseSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP r_minSEXP, SEXP r_maxSEXP, SEXP n_foldSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP, SEXP initSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXi& >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd& >::type noise(noiseSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd& >::type X(XSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
@@ -89,17 +97,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_it(max_itSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(cv_rank(omega, X, m, n, r_min, r_max, n_fold, max_it, tol, type));
+    Rcpp::traits::input_parameter< bool >::type init(initSEXP);
+    rcpp_result_gen = Rcpp::wrap(cv_rank(omega, noise, X, m, n, r_min, r_max, n_fold, max_it, tol, type, init));
     return rcpp_result_gen;
 END_RCPP
 }
 // ic_rank
-Eigen::VectorXd ic_rank(Eigen::MatrixXi& omega, Eigen::VectorXd& X, int m, int n, int r_min, int r_max, int max_it, double tol, int type);
-RcppExport SEXP _eimpute_ic_rank(SEXP omegaSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP r_minSEXP, SEXP r_maxSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP) {
+Eigen::VectorXd ic_rank(Eigen::MatrixXi& omega, Eigen::MatrixXd& noise, Eigen::VectorXd& X, int m, int n, int r_min, int r_max, int max_it, double tol, int type, bool init);
+RcppExport SEXP _eimpute_ic_rank(SEXP omegaSEXP, SEXP noiseSEXP, SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP r_minSEXP, SEXP r_maxSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP typeSEXP, SEXP initSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXi& >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd& >::type noise(noiseSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd& >::type X(XSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
@@ -108,7 +118,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_it(max_itSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(ic_rank(omega, X, m, n, r_min, r_max, max_it, tol, type));
+    Rcpp::traits::input_parameter< bool >::type init(initSEXP);
+    rcpp_result_gen = Rcpp::wrap(ic_rank(omega, noise, X, m, n, r_min, r_max, max_it, tol, type, init));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -117,9 +128,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eimpute_vec2mat", (DL_FUNC) &_eimpute_vec2mat, 3},
     {"_eimpute_biscale_alt", (DL_FUNC) &_eimpute_biscale_alt, 14},
     {"_eimpute_trun_svd", (DL_FUNC) &_eimpute_trun_svd, 2},
-    {"_eimpute_kkt_fix", (DL_FUNC) &_eimpute_kkt_fix, 8},
-    {"_eimpute_cv_rank", (DL_FUNC) &_eimpute_cv_rank, 10},
-    {"_eimpute_ic_rank", (DL_FUNC) &_eimpute_ic_rank, 9},
+    {"_eimpute_kkt_fix", (DL_FUNC) &_eimpute_kkt_fix, 10},
+    {"_eimpute_cv_rank", (DL_FUNC) &_eimpute_cv_rank, 12},
+    {"_eimpute_ic_rank", (DL_FUNC) &_eimpute_ic_rank, 11},
     {NULL, NULL, 0}
 };
 

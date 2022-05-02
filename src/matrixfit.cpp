@@ -81,11 +81,11 @@ Eigen::MatrixXd trun_svd(Eigen::MatrixXd X, int k)
   // MatProd* op_orig = get_mat_prod_op(A_mat, m, n, A_mat, 1);
   MatProd *op_orig = new MatProd_matrix(A_mat, m, n);
   // Operation for SVD
-  MatProd *op;
+  // MatProd *op;
 
   if (m > n)
   {
-    op = new SVDTallOp(op_orig, center, scale, ctr_map, scl_map);
+    MatProd *op = new SVDTallOp(op_orig, center, scale, ctr_map, scl_map);
     SymEigsSolver<double, LARGEST_ALGE, MatProd> eig_r(op, K, 2 * K + 1 > n ? n : 2 * K + 1);
     // MatrixXd R = X.transpose() * X;
     // DenseSymMatProd<double> op_r(R);
@@ -115,6 +115,7 @@ Eigen::MatrixXd trun_svd(Eigen::MatrixXd X, int k)
         u.col(i).array() /= d(i);
         D(i, i) = d(i);
       }
+      // cout<<D<<endl;
       Y = u * D * v.transpose();
     }
   }
@@ -122,7 +123,7 @@ Eigen::MatrixXd trun_svd(Eigen::MatrixXd X, int k)
   {
     //MatProd* L;
     // L = new SVDWideOp(op_orig);
-    op = new SVDWideOp(op_orig, center, scale, ctr_map, scl_map);
+    MatProd *op = new SVDWideOp(op_orig, center, scale, ctr_map, scl_map);
     SymEigsSolver<double, LARGEST_ALGE, MatProd> eig_l(op, K, 2 * K + 1 > n ? n : 2 * K + 1);
     // MatrixXd L = X * X.transpose();
     // DenseSymMatProd<double> op_l(L);
@@ -153,7 +154,7 @@ Eigen::MatrixXd trun_svd(Eigen::MatrixXd X, int k)
         v.col(i).array() /= d(i);
         D(i, i) = d(i);
       }
-
+      // cout<<D<<endl;
       Y = u * D * v.transpose();
       // MatrixXd vec_l = eig_l.eigenvectors(K);
       // Y = vec_l * vec_l.transpose() * X;
@@ -179,18 +180,21 @@ MatrixXd DS(MatrixXd M, MatrixXd L, vector<value_index> imp, int s)
 
 //' @noRd
 //' @param omega The matrix index of the observed value
+//' @param noise the noise matrix
 //' @param X The obeserved value of the matrix
 //' @param m, n The dimension of the matrix
 //' @param rank The rank of matrix
 //' @param max_it	 maximum number of iterations.
 //' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 //' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+//' @param init whether to initialize or not.
 //' @description Use Rcpp to fit a low-rank matrix approximation to a matrix with two method computing singular value decomposition.
 // [[Rcpp::export]]
-List kkt_fix(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int rank, int max_it, double tol, int type)
+List kkt_fix(Eigen::MatrixXi &omega, Eigen::MatrixXd &noise, Eigen::VectorXd &X, int m, int n, int rank, int max_it, double tol, int type, bool init)
 {
   // when rho = 1, it is equivalent to Hard Impute
   int l = omega.rows();
+  int k = noise.rows();
   double temp = X.mean();
   double train_error;
   Eigen::VectorXd X_train = X;
@@ -199,6 +203,25 @@ List kkt_fix(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int rank,
   int count = 0;
   int r = 1;
   int c = 1;
+
+  // noise added
+  if (init == TRUE)
+  {
+    for (int i = 0; i < k; i++){
+      r = noise(i, 0);
+      c = noise(i, 1);
+      Z_old(r, c) = noise(i, 2);
+    }
+  }
+  else
+  {
+    for (int i = 0; i < k; i++){
+      r = noise(i, 0);
+      c = noise(i, 1);
+      Z_old(r, c) = Z_old(r, c) + noise(i, 2);
+    }
+  }
+
 
   Eigen::MatrixXd (*svd_method)(Eigen::MatrixXd, int);
 #ifndef WIN_BUILD
@@ -223,6 +246,7 @@ List kkt_fix(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int rank,
       X_train(i) = Z_old(r, c);
       Z_old(r, c) = X(i);
     }
+
     Z_old = svd_method(Z_old, rank);
     eps = 0;
     for (int i = 0; i < l; i++)
@@ -249,6 +273,7 @@ List kkt_fix(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int rank,
 
 //' @noRd
 //' @param omega The matrix index of the observed value
+//' @param noise the noise matrix
 //' @param X The obeserved value of the matrix
 //' @param m, n The dimension of the matrix
 //' @param r_min The start rank for searching
@@ -257,9 +282,10 @@ List kkt_fix(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int rank,
 //' @param max_it	maximum number of iterations.
 //' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 //' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+//' @param init whether to initialize or not.
 //' @description Use Rcpp to search rank with cross validation.
 // [[Rcpp::export]]
-Eigen::VectorXd cv_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int r_min, int r_max, int n_fold, int max_it, double tol, int type)
+Eigen::VectorXd cv_rank(Eigen::MatrixXi &omega, Eigen::MatrixXd &noise, Eigen::VectorXd &X, int m, int n, int r_min, int r_max, int n_fold, int max_it, double tol, int type, bool init)
 {
   Rcpp::List res_list;
   int num = omega.rows();
@@ -303,7 +329,7 @@ Eigen::VectorXd cv_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n
 
     for (int k = 0; k < r_num; k++) {
       int temp_rank = r_min + k;
-      res_list = kkt_fix(train_set_ind, train_set, m, n, temp_rank, max_it, tol, type);
+      res_list = kkt_fix(train_set_ind, noise, train_set, m, n, temp_rank, max_it, tol, type, init);
       cv_res_matrix = res_list["Z"];
       test_error_old = 0;
       for (int j = 0; j < test_size; j++) {
@@ -321,6 +347,7 @@ Eigen::VectorXd cv_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n
 
 //' @noRd
 //' @param omega The matrix index of the observed value
+//' @param noise the noise matrix
 //' @param X The obeserved value of the matrix
 //' @param m, n The dimension of the matrix
 //' @param r_min The start rank for searching
@@ -328,9 +355,10 @@ Eigen::VectorXd cv_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n
 //' @param max_it	 maximum number of iterations.
 //' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 //' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+//' @param init whether to initialize or not.
 //' @description Use Rcpp to search rank with information criterion rule.
 // [[Rcpp::export]]
-Eigen::VectorXd ic_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n, int r_min, int r_max, int max_it, double tol, int type)
+Eigen::VectorXd ic_rank(Eigen::MatrixXi &omega, Eigen::MatrixXd &noise, Eigen::VectorXd &X, int m, int n, int r_min, int r_max, int max_it, double tol, int type, bool init)
 {
   Rcpp::List res_list;
   int r_temp;
@@ -342,7 +370,7 @@ Eigen::VectorXd ic_rank(Eigen::MatrixXi &omega, Eigen::VectorXd &X, int m, int n
 
   for(int j = 0; j < r_len; j++){
     r_temp = r_min + j;
-    res_list = kkt_fix(omega, X, m, n, r_temp, max_it, tol, type);
+    res_list = kkt_fix(omega, noise, X, m, n, r_temp, max_it, tol, type, init);
     res_error(j) = res_list["train_error"];
   }
   return res_error;

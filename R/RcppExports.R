@@ -15,19 +15,22 @@ trun_svd <- function(X, k) {
 
 #' @noRd
 #' @param omega The matrix index of the observed value
+#' @param noise the noise matrix
 #' @param X The obeserved value of the matrix
 #' @param m, n The dimension of the matrix
 #' @param rank The rank of matrix
 #' @param max_it	 maximum number of iterations.
 #' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 #' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+#' @param init whether to initialize or not.
 #' @description Use Rcpp to fit a low-rank matrix approximation to a matrix with two method computing singular value decomposition.
-kkt_fix <- function(omega, X, m, n, rank, max_it, tol, type) {
-    .Call(`_eimpute_kkt_fix`, omega, X, m, n, rank, max_it, tol, type)
+kkt_fix <- function(omega, noise, X, m, n, rank, max_it, tol, type, init) {
+    .Call(`_eimpute_kkt_fix`, omega, noise, X, m, n, rank, max_it, tol, type, init)
 }
 
 #' @noRd
 #' @param omega The matrix index of the observed value
+#' @param noise the noise matrix
 #' @param X The obeserved value of the matrix
 #' @param m, n The dimension of the matrix
 #' @param r_min The start rank for searching
@@ -36,13 +39,15 @@ kkt_fix <- function(omega, X, m, n, rank, max_it, tol, type) {
 #' @param max_it	maximum number of iterations.
 #' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 #' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+#' @param init whether to initialize or not.
 #' @description Use Rcpp to search rank with cross validation.
-cv_rank <- function(omega, X, m, n, r_min, r_max, n_fold, max_it, tol, type) {
-    .Call(`_eimpute_cv_rank`, omega, X, m, n, r_min, r_max, n_fold, max_it, tol, type)
+cv_rank <- function(omega, noise, X, m, n, r_min, r_max, n_fold, max_it, tol, type, init) {
+    .Call(`_eimpute_cv_rank`, omega, noise, X, m, n, r_min, r_max, n_fold, max_it, tol, type, init)
 }
 
 #' @noRd
 #' @param omega The matrix index of the observed value
+#' @param noise the noise matrix
 #' @param X The obeserved value of the matrix
 #' @param m, n The dimension of the matrix
 #' @param r_min The start rank for searching
@@ -50,8 +55,9 @@ cv_rank <- function(omega, X, m, n, r_min, r_max, n_fold, max_it, tol, type) {
 #' @param max_it	 maximum number of iterations.
 #' @param tol convergence threshold, measured as the relative change in the Frobenius norm between two successive estimates.
 #' @param type computing singular value decomposition, 1 is truncated singular value decomposition, 2 is randomized singular value decomposition
+#' @param init whether to initialize or not.
 #' @description Use Rcpp to search rank with information criterion rule.
-ic_rank <- function(omega, X, m, n, r_min, r_max, max_it, tol, type) {
-    .Call(`_eimpute_ic_rank`, omega, X, m, n, r_min, r_max, max_it, tol, type)
+ic_rank <- function(omega, noise, X, m, n, r_min, r_max, max_it, tol, type, init) {
+    .Call(`_eimpute_ic_rank`, omega, noise, X, m, n, r_min, r_max, max_it, tol, type, init)
 }
 
