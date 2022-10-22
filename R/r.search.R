@@ -67,9 +67,11 @@ r.search <- function(x, r.min = 1, r.max = "auto",
   }
   ind_miss[,1:2] <- ind_miss[,1:2] - 1
   if(r.max == "auto"){
-    r.max = floor((m + n + sqrt((n + m)^2 - 4 * nrow(ind_ob)))/2)
+    r.max = floor((m + n - sqrt((n + m)^2 - 4 * nrow(ind_ob)))/2)
   }
-
+  if(r.max == 0){
+    r.max = 1
+  }
   svdm <- match.arg(svd.method)
   type <- ifelse(svdm == "tsvd", 1, 2)
 
@@ -77,6 +79,7 @@ r.search <- function(x, r.min = 1, r.max = "auto",
   rulet <- ifelse(rule == "cv", "cv", "gic")
 
   res <- vector()
+  res2 <- vector()
   rank.seq <- r.min : r.max
 
   if(rulet == "cv"){
@@ -87,17 +90,18 @@ r.search <- function(x, r.min = 1, r.max = "auto",
     m1 <- max(m, n)
     m2 <- min(m, n)
     res <- m2*log(Z_temp) + rank.seq*log(log(m2)) * log(m1)
+    res2 <- log(Z_temp)
   }
 
   r.est <- rank.seq[which.min(res)]
 
-  Z_temp <- kkt_fix(ind, ind_miss, x_ob, m, n, r.est, maxit, thresh, type, init)
-  Z.fit <- Z_temp[[1]] * (x_sd[[4]] %*% t(x_sd[[5]])) + matrix(rep(x_sd[[2]], n), nrow = m) + t(matrix(rep(x_sd[[3]], m), nrow = n))
-  if (!override) {
-    Z.fit[ind_ob] <- x_ob
-  }
+  # Z_temp <- kkt_fix(ind, ind_miss, x_ob, m, n, r.est, maxit, thresh, type, init)
+  # Z.fit <- Z_temp[[1]] * (x_sd[[4]] %*% t(x_sd[[5]])) + matrix(rep(x_sd[[2]], n), nrow = m) + t(matrix(rep(x_sd[[3]], m), nrow = n))
+  # if (!override) {
+  #   Z.fit[ind_ob] <- x_ob
+  # }
 
-  list(x.imp = Z.fit, r.est = r.est, rmse = Z_temp[[3]], iter.count = Z_temp[[2]])
+  list(r.est = r.est, gicseq = res, errseq = res2)
 }
 
 

@@ -1,8 +1,8 @@
 Package: eimpute
 Type: Package
 Title: Efficiently Impute Large Scale Incomplete Matrix
-Version: 0.2.1
-Date: 2022-04-29
+Version: 0.2.2
+Date: 2022-10-22
 Authors@R: c(
   person(given = "Zhe", family = "Gao", email = "gaozh8@mail2.sysu.edu.cn", role = c("aut", "cre")),
   person(given = "Jin", family = "Zhu", email = "zhuj37@mail2.sysu.edu.cn", role = c("aut")),
@@ -28,8 +28,8 @@ LinkingTo: Rcpp, RcppEigen
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
-Packaged: 2022-05-02 11:35:34 UTC; gaozhe
+Packaged: 2022-10-22 07:56:33 UTC; gaozhe
 Suggests: knitr
 VignetteBuilder: knitr
 Repository: CRAN
-Date/Publication: 2022-05-02 11:50:13 UTC
+Date/Publication: 2022-10-22 08:15:06 UTC
