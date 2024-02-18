@@ -25,13 +25,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // biscale_alt
-List biscale_alt(Eigen::MatrixXd x, Eigen::MatrixXd ind, Eigen::VectorXd obsrow, Eigen::VectorXd obscol, int max_it, double tol, Eigen::VectorXd alpha, Eigen::VectorXd beta, Eigen::VectorXd tau, Eigen::VectorXd gamma, bool row_mean, bool col_mean, bool row_std, bool col_std);
+List biscale_alt(Eigen::MatrixXd x, Eigen::MatrixXi ind, Eigen::VectorXd obsrow, Eigen::VectorXd obscol, int max_it, double tol, Eigen::VectorXd alpha, Eigen::VectorXd beta, Eigen::VectorXd tau, Eigen::VectorXd gamma, bool row_mean, bool col_mean, bool row_std, bool col_std);
 RcppExport SEXP _eimpute_biscale_alt(SEXP xSEXP, SEXP indSEXP, SEXP obsrowSEXP, SEXP obscolSEXP, SEXP max_itSEXP, SEXP tolSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP tauSEXP, SEXP gammaSEXP, SEXP row_meanSEXP, SEXP col_meanSEXP, SEXP row_stdSEXP, SEXP col_stdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXi >::type ind(indSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd >::type obsrow(obsrowSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd >::type obscol(obscolSEXP);
     Rcpp::traits::input_parameter< int >::type max_it(max_itSEXP);

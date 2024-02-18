@@ -46,4 +46,4 @@ References
 
 Bug report
 ----------
-Send an email to Zhe Gao at gaozh8@mail2.sysu.edu.cn
+Send an email to Zhe Gao at gaozh8@mail.ustc.edu.cn

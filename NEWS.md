@@ -1,3 +1,7 @@
+# eimpute 0.2.3
+
+* Modified the code for RcppEigen 3.4.0.
+
 # eimpute 0.2.2
 
 * Modified the calculation of the parameter r.max("auto").
