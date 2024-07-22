@@ -1,11 +1,11 @@
-## ---- include = FALSE, eval=TRUE----------------------------------------------
+## ----include = FALSE, eval=TRUE-----------------------------------------------
 knitr::opts_chunk$set(comment = "#>", warning = FALSE, eval = TRUE, message = FALSE, collapse = TRUE)
 library(eimpute)
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  install.packages("eimpute")
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  library(devtools)
 #  install_github("Mamba413/eimpute", build_vignettes = TRUE)
 

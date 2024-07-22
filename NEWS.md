@@ -1,10 +1,6 @@
-# eimpute 0.2.3
+# eimpute 0.2.4
 
-* Modified the code for RcppEigen 3.4.0.
-
-# eimpute 0.2.2
-
-* Modified the calculation of the parameter r.max("auto").
+* Incorporated changes suggested by GCC compiler for C++20 to suppress the warning: warning: template-id not allowed for constructor in C++20.
 
 # eimpute 0.2.1
 

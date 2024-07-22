@@ -403,37 +403,37 @@ tsvd in time cost.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>Install the stable version from CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;eimpute&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;eimpute&quot;</span>)</span></code></pre></div>
 <p>Install the development version from github:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">&quot;Mamba413/eimpute&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">&quot;Mamba413/eimpute&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="quick-example" class="section level2">
 <h2>Quick Example</h2>
 <p>We start with a toy example. Let us generate a small matrix with some
 values missing via <strong>incomplete.generator</strong> function.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">6</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>x_na <span class="ot">&lt;-</span> <span class="fu">incomplete.generator</span>(m, n, r)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>x_na</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]       [,3]      [,4]       [,5]</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [1,] -0.8269428  1.2228586         NA        NA         NA</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; [2,] -2.2410010  4.5095165         NA        NA         NA</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; [3,]  0.4499102         NA -0.2818085 0.7718102 -0.8364048</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [4,]         NA  1.7167365  0.9480745        NA  3.5680208</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; [5,]         NA  0.7240437         NA        NA  0.2633712</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; [6,]         NA -2.8879249         NA 1.2027552         NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x_na <span class="ot">&lt;-</span> <span class="fu">incomplete.generator</span>(m, n, r)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>x_na</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]       [,3]      [,4]       [,5]</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] -0.8269428  1.2228586         NA        NA         NA</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,] -2.2410010  4.5095165         NA        NA         NA</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,]  0.4499102         NA -0.2818085 0.7718102 -0.8364048</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,]         NA  1.7167365  0.9480745        NA  3.5680208</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,]         NA  0.7240437         NA        NA  0.2633712</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6,]         NA -2.8879249         NA 1.2027552         NA</span></span></code></pre></div>
 <p>Use <strong>eimpute</strong> function to impute missing values.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>x_impute <span class="ot">&lt;-</span> <span class="fu">eimpute</span>(x_na, r)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>x_impute[[<span class="st">&quot;x.imp&quot;</span>]]</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]        [,3]      [,4]       [,5]</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [1,] -0.8269428  1.2228586  0.19035820 0.9514541  0.2994880</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [2,] -2.2410010  4.5095165  0.39560039 0.7295574  0.4911418</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.4499102 -1.2083884 -0.28180850 0.7718102 -0.8364048</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; [4,] -0.3408353  1.7167365  0.94807452 0.1835412  3.5680208</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; [5,] -0.3669454  0.7240437  0.11988844 0.3294654  0.2633712</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; [6,]  1.3875965 -2.8879249  0.01871091 1.2027552  0.4512052</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x_impute <span class="ot">&lt;-</span> <span class="fu">eimpute</span>(x_na, r)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x_impute[[<span class="st">&quot;x.imp&quot;</span>]]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]        [,3]      [,4]       [,5]</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] -0.8269428  1.2228586  0.19035820 0.9514541  0.2994880</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,] -2.2410010  4.5095165  0.39560039 0.7295574  0.4911418</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3,]  0.4499102 -1.2083884 -0.28180850 0.7718102 -0.8364048</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4,] -0.3408353  1.7167365  0.94807452 0.1835412  3.5680208</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5,] -0.3669454  0.7240437  0.11988844 0.3294654  0.2633712</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6,]  1.3875965 -2.8879249  0.01871091 1.2027552  0.4512052</span></span></code></pre></div>
 </div>
 
 

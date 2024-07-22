@@ -67,11 +67,9 @@ r.search <- function(x, r.min = 1, r.max = "auto",
   }
   ind_miss[,1:2] <- ind_miss[,1:2] - 1
   if(r.max == "auto"){
-    r.max = floor((m + n - sqrt((n + m)^2 - 4 * nrow(ind_ob)))/2)
+    r.max = floor((m + n + sqrt((n + m)^2 - 4 * nrow(ind_ob)))/2)
   }
-  if(r.max == 0){
-    r.max = 1
-  }
+
   svdm <- match.arg(svd.method)
   type <- ifelse(svdm == "tsvd", 1, 2)
 
